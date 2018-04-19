@@ -10,58 +10,21 @@ class ItemOfToDoList:
         self.booleanDone = booleanDone
         self.strToDo = strToDo
         self.dateToDo = dateToDo
-'''
-maTodoList = MyToDoList( 'database=mydb, user=bla, pass=bla, host=localhost' )
-if ( maTodoList.connect() )
-    maTodoList.printList()
 
-    while( cmd = maTodoList.getCMD( ) !== 'q' )
-        if( cmd === 'n' )
-
-        else if (cmd === 'l' )
-            maTodoList.startRead( )
-        else
-            print( 'Wow, den Befehl kenne ich nicht' )
-
-else 
-    print( 'UPS. Ich kann nicht zu DB Verbindung aufbauen' )
-
-
-newItem = ItemOfToDoList()
-newItem.setToDO( 'Muss noch was erledigen' )
-newItem.setDate( time( ) + 2T )
-'''
-
-def generateStringForList(numberOfList, checkDone, strToDo, dateToDo):
     
-    stringForList = "* " + str(numberOfList) + " [ " + str(checkDone) + " ] " + strToDo +  ", am " + dateToDo + " *"
-    stringOhneStrToDoForList = "* " + str(numberOfList) + " [ " + str(checkDone) + " ] , am " + dateToDo + " *"
-    
-    lengthStringOhne= len(stringOhneStrToDoForList)
-    lengthPreviousString = len(stringForList)
 
-    if lengthPreviousString > 67:
 
-        strToDo = strToDo[ 0 : 64 - lengthStringOhne ] + "..."
 
-        stringForList = "* " + str(numberOfList) + " [ " + str(checkDone) + " ] " + strToDo +  ", am " + dateToDo + " *"
 
-        return stringForList
-    
-    else:
 
-        starsForRemaingSpace = (67 - lengthPreviousString)//2
-        starString = ( "." * starsForRemaingSpace )
 
-        if  (67 - lengthPreviousString) % 2 == 1:
 
-            stringForList = "* " + str(numberOfList) + " [ " + str(checkDone) + " ] " + starString + strToDo + starString + "." + ", am " + dateToDo + " *"
-        
-        else:
-            
-            stringForList = "* " + str(numberOfList) + " [ " + str(checkDone) + " ] " + starString + strToDo + starString + ", am " + dateToDo + " *"
-       
-        return stringForList
+
+
+
+
+
+
 
 def pageChanger(command):
     
@@ -96,9 +59,6 @@ def pageChanger(command):
             for item in listOfItems:
                 print(item)
 
-
-       
-
     elif command == "p" :
         
         if len(listOfItems) > 10:
@@ -120,42 +80,10 @@ def pageChanger(command):
     UserInteraction.getCommand()
 
 
-def initListOfItems():
 
-    listOfItems = []
 
-    arrAllItems = SqlConnector.getallItemsForList()
 
-    for item in arrAllItems:
-        
-        strToDo = item[0]
-        checkDone = item[1]
-        dateToDo = item[2]
-        numberOfList = item[3]
 
-        
-        listOfItems.append( generateStringForList(numberOfList, checkDone, strToDo, dateToDo) )
-    
-    
-    for item in listOfItems:
-        print(item)
-
-def initTop() :
-   
-        print("*" * 25 + " TO - DO - LISTE " + "*" * 25)
-
-def initBottom():
-        print("*" * 67)
-
-def addListItem( strToDo, dateToDo ):
-
-    SqlConnector.uploadItem(strToDo, dateToDo)
-    
-    #arrAllItems = SqlConnector.getallItemsForList()
-
-   # initListOfItems()
-
-    initToDoList()
 
 
 def initToDoList():
