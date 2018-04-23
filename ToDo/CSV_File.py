@@ -123,7 +123,12 @@ class CSV_File :
         with open(r"C:\Users\krakia\Desktop\4.Semester\Test\ToDo\CSV_ToDo.csv",'w') as csvfile:
             csv_writer = csv.writer(csvfile, delimiter=',',
                                             quotechar='', quoting=csv.QUOTE_NONE)
+            
+            arrayListofItems = []
             for item in itemArray:
+                arrayListofItems.append(item)
+
+            for item in arrayListofItems:
 
                 if item[0] == "strToDo":
                     csv_writer.writerow( [ item[0], item[1], item[2] ] )
@@ -138,7 +143,9 @@ class CSV_File :
                 
                 if type(date) != str :
 
-                    date.strftime("%d.%m.%Y")
+                   new_date = date.strftime("%d.%m.%Y")
                 
                 
-                csv_writer.writerow( [ item[0], boolean, date] )
+                csv_writer.writerow( [ item[0], boolean, new_date] )
+
+        return "1"

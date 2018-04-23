@@ -19,7 +19,7 @@ class Window:
 
     def __init__(self):
 
-        self.top =  "*" * 25 + " TO_DO_LISTE_DB  " + "*" * 25
+        self.top =  "*" * 27 + " TO_DO_LISTE  " + "*" * 26
         self.bottom = "*" * 67
 
     def initTop(self) :
@@ -51,7 +51,11 @@ class Window:
         print("┌" + "─" * 65 + "┐")
         self.textOutPut_hack("│" + " "*17 + "WELCHE DER OPTIONEN WÄHLEN SIE?" + " "*17 + "│\n")   
         choise = str(input("└" + "─" * 65 + "┘\n >>>   "))
+        
         return choise
+        
+       
+
 
     def choiseControl(self, choise):
 
@@ -115,37 +119,52 @@ class Window:
         
         if arrAllItems_Index == "1":
 
-            print("Menu:\nWählen Sie zwischen den folgenden Optionen: ")
+           
+            self.textOutPut_hack("\n\nMENU:\nWÄHLEN SIE ZWISCHEN DEN FOLGENDEN OPTIONEN: ")
+            
+            print("─" * 67 )
             print("?    ->      Statistik")
             print("n    ->      Neuer Listen - Eintrag")
             print("l    ->      Einen Eintrag lesen")
             print("s    ->      Status eines Eintrags ändern")
             print("t    ->      Nächste Seite der To - Do - Liste")
             print("p    ->      Vorrige Seite der To - Do - Liste")
-            print("i    ->      CSV-Datei in DB importieren")
+            print("─" * 67 )
+           # print("i    ->      CSV-Datei in DB importieren")
 
         else :
+            
+            print("\n\n┌" + "─" * 65 + "┐")         
+            self.textOutPut_hack("│" + " "*16 + "              MENU:           " + " "*19 + "│\n")   
+            print("└" + "─" * 65 + "┘ ")
 
-            print("Menu:\nWählen Sie zwischen den folgenden Optionen: ")
-            print("?    ->      Statistik")
+            self.textOutPut_hack("\nWÄHLEN SIE ZWISCHEN DEN FOLGENDEN OPTIONEN:\n\n ")
+            print("─" * 67 )
+            print("s    ->      Statistik")
             print("n    ->      Neuer Listen - Eintrag")
             print("l    ->      Einen Eintrag lesen")
-            print("s    ->      Status eines Eintrags ändern")
+            print("a    ->      Status eines Eintrags ändern")
             print("t    ->      Nächste Seite der To - Do - Liste")
             print("p    ->      Vorrige Seite der To - Do - Liste")
-            print("e    ->      Datensätze der DB in die CSV-Datei exportieren")
+            print("─" * 67 )
+           # print("e    ->      Datensätze der DB in die CSV-Datei exportieren")
 
     def changingInteraction(self):
 
-        print("Sie haben folgende Option zur Änderung Ihrer Eingaben:\n\n")
+        print("┌" + "─" * 65 + "┐")         
+        self.textOutPut_hack("│" + " "*14 + "              ÄNDERUNG:           " + " "*17 + "│\n")   
+        print("└" + "─" * 65 + "┘ ")
+       
+        self.textOutPut_hack("\n>>>    WÄHLEN SIE ZWISCHEN DEN FOLGENDEN OPTIONEN ZUR ÄNDERUNG IHRER EINGABEN:\n\n ")
         
+        print("─" * 67 )
         print("( t )  ||  Tätigkeit ändern ")
         print("( d )  ||  Datum ändern ")
         print("( s )  ||  Status ändern ")
         print("( q )  ||  Verlassen \n\n")
-
-        command = input ("Was ist Ihr Wunsch?   ")
-        
+        print("─" * 67 )
+        command = input ("\nWAS IST IHR WUNSCH?>>>   ")
+        print("\n")
         return command   
 
 
@@ -153,7 +172,7 @@ class Window:
 
         if arrAllItems_Index == "1":
            
-            command = input("Meine Wahl ist:   ")
+            command = input("\nMEINE WAHL IST:\n>>>     ")
 
             if command == "n" :            
                 return "n"
@@ -162,18 +181,10 @@ class Window:
                 return "l"
 
             elif command == "s":
-                
-                #print("Mit dieser Option, können Sie eines Ihrer Einträge ändern.")
-                #numberOfList = input("Welche Nummer in Ihrer Liste wollen Sie ändern?   ")
-                
-                #List.changeSpecifiedItemOfList(numberOfList)
-
                 return "s"
 
             elif command == "t" :
                 return "t"
-            #   List.pageChanger("t")    
-            #  print("")
             
             elif command == "p" :
                 return "p"
@@ -181,7 +192,7 @@ class Window:
 
         else :
 
-            command = input("Meine Wahl ist:   ")
+            command = input("\nMEINE WAHL IST:\n>>>     ")
 
             if command == "n" :            
                 return "n"
@@ -197,6 +208,9 @@ class Window:
                   
             elif command == "p" :
                 return "p"
+            
+            elif command == "a" :
+                return "a"
             
 
     def printListOfItems(self, items):

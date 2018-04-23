@@ -42,8 +42,8 @@ class SQLConnector:
     def uploadNewItem(self, item):
 
         self.strToDo = item[0]
-        self.checkDone = item[2]
-        self.dateToDo = item[1].strftime("%d.%m.%y")
+        self.checkDone = item[1]
+        self.dateToDo = item[2].strftime("%d.%m.%y")
         
         connectionToDataBase = self.connect()
 
@@ -67,9 +67,9 @@ class SQLConnector:
     def changeItem(self, item, window):
 
         self.strToDo = item[0]
-        self.checkDone = item[2]
-        timeItem = item[1]
-        timeItem = timeItem[:6] + "20" + timeItem[6:]
+        self.checkDone = item[1]
+        timeItem = item[2]
+        timeItem = timeItem[:6] + timeItem[6:]
         
   
         

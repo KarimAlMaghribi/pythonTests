@@ -5,23 +5,37 @@ import Window
 import SqlConnector
 import ListItem
 import unserinteraction
-
+import sys
+import time
 
 class dbInteraction:
+
+    def textOutPut_hack(self, string):
+
+        length_Of_String = len(string)
+        
+        i = 0
+        while i < length_Of_String:
+            print(string[i], end="")
+            sys.stdout.flush()
+            time.sleep(.035)
+            i += 1
 
     def menuInteration(self, nextStep, arrOfAllElements, connector, window, index_Of_nxtStep): 
 
 
             if nextStep == "n" :
-                newToDoData = input("Was haben Sie vor?   " )
-                newToDoDate = input("Und an welchem Datum? || dd.mm.yyyy   ")
+
+                newToDoData = input(self.textOutPut_hack("WAS HABEN SIE VOR?\n>>>   "))
+             
+                newToDoDate = input(self.textOutPut_hack("\nAN WELCHEN DATUM? || dd.mm.yyyy   "))
 
                 try:
 
                     ToDoDate = datetime.strptime(newToDoDate, "%d.%m.%Y")
 
                     if ToDoDate < datetime.now():
-                        print("\n\n > > > Dieses Datum liegt in der Vergangenheit\n\n")
+                        self.textOutPut_hack("\n\n > > > Dieses Datum liegt in der Vergangenheit\n\n")
                         self.menuInteration(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
                 
                 except:
@@ -51,8 +65,9 @@ class dbInteraction:
             
             elif nextStep == "l" :
                 
-                print("Mit dieser Option, können Sie eines Ihrer Einträge auslesen.")
-                numberOfList = input("Welche Nummer wollen Sie einlesen?   ")
+                self.textOutPut_hack("MIT DIESER OPTION KÖNNEN SIE EINES IHRER EINTRÄGEAUSLESEN.\n")
+                self.textOutPut_hack("WELCHE NUMMER WOLLEN SIE AUSLESEN?   ") 
+                numberOfList = input("\n>>>   ")   
 
                 downloadedItem = connector.downloadItem(numberOfList)
 
@@ -94,7 +109,7 @@ class dbInteraction:
 
                     self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
 
-            elif nextStep == "s" :
+            elif nextStep == "a" :
                 
                 print("Mit dieser Option, können Sie eines Ihrer Einträge ändern.")
                 numberOfList = input("Welche Nummer in Ihrer Liste wollen Sie ändern?   ")  
@@ -105,8 +120,8 @@ class dbInteraction:
                 newItemforDB = item.getItem()
 
                 strToDo         = newItemforDB[0]
-                dateToDo        = newItemforDB[1].strftime("%d.%m.%y")
-                checkDone       = newItemforDB[2]  
+                dateToDo        = newItemforDB[2].strftime("%d.%m.%y")
+                checkDone       = newItemforDB[1]  
 
                 command =  window.changingInteraction()
 
@@ -183,52 +198,52 @@ class dbInteraction:
                         item = ListItem.ItemOfToDoList(strToDo, dateInput, checkDone)
                         newItemforDB = item.getItem()
                         connector.changeItem(newItemforDB, window)
-                        window.initToDoList( connector.getallItemsForList() )
+                        window.initToDoList( connector.getallItemsForList(), 0, index_Of_nxtStep )
                             
                         window = Window.Window()
                         connector = SqlConnector.SQLConnector()
 
                         arrOfAllElements = connector.getallItemsForList()
                 
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
+                      #  nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
                 
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                       # user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
 
                         self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
                         
 
                     elif checker == "n" :
                 
-                        window.initToDoList( connector.getallItemsForList )
+                        window.initToDoList( connector.getallItemsForList, 0, index_Of_nxtStep )
                         
                         window = Window.Window()
                         connector = SqlConnector.SQLConnector()
 
                         arrOfAllElements = connector.getallItemsForList()
                 
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
+                    #    nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
                 
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                   #     user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
 
                         self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
                             
                     else: 
                                 
                         print("Ihre Eingabe war nicht korrekt")
-                        window.initToDoList( connector.getallItemsForList )
+                        window.initToDoList( connector.getallItemsForList, 0, index_Of_nxtStep )
                             
                         window = Window.Window()
                         connector = SqlConnector.SQLConnector()
 
                         arrOfAllElements = connector.getallItemsForList()
                 
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
+                   #     nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
                 
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                    #    user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
 
                         self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
             
-                elif command == "s":
+                elif command == "a":
             
                     print(" Sie wollen den Status, der Tätigkeit ' " + strToDo[0:10] + "..."+ " am " + dateToDo +" ändern.")
                         
@@ -255,41 +270,41 @@ class dbInteraction:
 
                         arrOfAllElements = connector.getallItemsForList()
                     
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                    
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                     #   nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
+                    #
+                     #   user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
 
                         self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
                                 
 
                     elif checkerStatusChange == "n" :
 
-                        window.initToDoList(connector.getallItemsForList)
+                        window.initToDoList(connector.getallItemsForList, 0, index_Of_nxtStep)
 
                         window = Window.Window()
                         connector = SqlConnector.SQLConnector()
 
                         arrOfAllElements = connector.getallItemsForList()
                     
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
+                   #     nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
                     
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                     #   user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
 
                         self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
 
                     else : 
 
                         print("Sie haben eine falsche Angabe gemacht.")
-                        window.initToDoList(connector.getallItemsForList)
+                        window.initToDoList(connector.getallItemsForList, 0, index_Of_nxtStep)
                             
                         window = Window.Window()
                         connector = SqlConnector.SQLConnector()
 
                         arrOfAllElements = connector.getallItemsForList()
                     
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
+                      #  nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
                     
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                      #  user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
 
                         self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
             
@@ -313,7 +328,7 @@ class dbInteraction:
                 user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
                 self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
 
-            elif nextStep == "?" :
+            elif nextStep == "s" :
                 
                 window = Window.Window()
                 connector = SqlConnector.SQLConnector()

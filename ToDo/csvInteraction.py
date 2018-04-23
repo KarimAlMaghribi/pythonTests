@@ -93,8 +93,9 @@ class csvInteraction:
             elif nextStep == "s" :
                 
                 check_string = " "*13 + "» S «  SIE WOLLEN EINEN EINTRAG ÄNDERN" + " "*14
-                print("┌" + "─" * 65 + "┐")
-                self.textOutPut_hack("│" + check_string + "│\n\n") 
+                print("\n┌" + "─" * 65 + "┐")
+                self.textOutPut_hack("│" + check_string + "│\n")
+                print("└" + "─" * 65 + "┘\n\n")  
 
                 
                 numberOfList = int(input(">>>   Welche Nummer in Ihrer Liste wollen Sie ändern?\n\n>>>   ")  )
@@ -114,39 +115,122 @@ class csvInteraction:
                     
                     print(">>>   Sie wollen die Tätigkeit vom " + dateToDo + " ändern.\n")
                     stringInput = input(">>>   Geben Sie den neuen Eintrag ein:\n\n>>>   ")
-
-                    check_string = " "*5 + "WOLLEN SIE DEN EINTRAG NUN SPEICHERN ? » Y « OR » N « " + " "*6
+                    
                     print("\n\n┌" + "─" * 65 + "┐")
-                    self.textOutPut_hack("│" + check_string + "│\n\n") 
+                    self.textOutPut_hack("│" + check_string + "│\n")
+                    check_string = " "*5 + "WOLLEN SIE DEN EINTRAG NUN SPEICHERN ? » Y « OR » N « " + " "*6                 
+                    print("└" + "─" * 65 + "┘\n\n") 
                     checker = input( ">>>   " )
                     
                     if checker == "y" or check_string == "Y" :
                             
                         item = ListItem.ItemOfToDoList(stringInput, item_to_change[2], checkDone)
                         newItemforCSV = item.getItem()
-                        itemArray= []
-                        itemArray.append("strToDo,booleanToDo,dateToDo")
+                        start_item = ("strToDo", "booleanToDo", "dateToDo")
+                        
+                        itemArray=[]
+                        itemArray.append(start_item)
+                        
                         all_itemArray = file.readFile()
                         
                         for item in all_itemArray:
-                            itemArray.append(item[0])
+                            itemArray.append(item)
                         
-                        itemArray[id_number-1] = newItemforCSV
+                        itemArray[id_number] = newItemforCSV
 
-                        file.changeItem(itemArray)
-                        
-                        #connector.changeItem(newItemforDB, window)
-                        
-                        #window = Window.Window()
-                        #connector = SqlConnector.SQLConnector()
+                        is_it_ready = file.changeItem(itemArray)
 
-                        #arrOfAllElements = connector.getallItemsForList()
+                        if is_it_ready == "1" :
+
+                            ui = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                    
+                            command = ui.are_you_ready()
+
+                            if command == False :
+
+                                self.menuInteration(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+
+                        
+                       
+
+                    elif checker == "n" or check_string == "N" :
+                         
                 
-                        #nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                
-                        #user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
+                        
+                    else: 
+                            
+                        print("Ihre Eingabe war nicht korrekt")
+                        window.initToDoList( connector.getallItemsForList() )    
+                        
+                        window = Window.Window()
+                        connector = SqlConnector.SQLConnector()
 
-                        #self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
+                        arrOfAllElements = connector.getallItemsForList()
+                
+                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
+                
+                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+
+                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
+            
+                elif command == "d":
+                    
+                    
+                    print("Sie wollen das Datum, der Tätigkeit ' " + strToDo[0:10] + "..."+ " ' ändern.")
+                    
+                    dateInput = input("Geben Sie hierfür ein neues Datum ein:\n\n")
+
+                    try:
+
+                        new_date = datetime.strptime(dateInput, "%d.%m.%Y")
+
+                        if new_date < datetime.now():
+                            print("\n\n > > > Dieses Datum liegt in der Vergangenheit\n\n")
+                            self.menuInteration(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+
+                    except:
+
+                        print("Ihre Eingabe war nicht korrekt!")
+                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
+
+                    print("\n\n┌" + "─" * 65 + "┐")
+                    check_string = " "*5 + "WOLLEN SIE DEN EINTRAG NUN SPEICHERN ? » Y « OR » N « " + " "*6             
+                    self.textOutPut_hack("│" + check_string + "│\n")
+                        
+                    print("└" + "─" * 65 + "┘\n\n") 
+                    checker = input( ">>>   " )
+                    
+                    if checker == "y" or check_string == "Y" :
+                            
+                        item = ListItem.ItemOfToDoList(strToDo, new_date, checkDone)
+                        newItemforCSV = item.getItem()
+                        start_item = ("strToDo", "booleanToDo", "dateToDo")
+                        
+                        itemArray=[]
+                        itemArray.append(start_item)
+                        
+                        all_itemArray = file.readFile()
+                        
+                        for item in all_itemArray:
+                            itemArray.append(item)
+                        
+                        itemArray[id_number] = newItemforCSV
+
+                        is_it_ready = file.changeItem(itemArray)
+
+                        if is_it_ready == "1" :
+
+                            ui = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                    
+                            command = ui.are_you_ready()
+
+                            if command == False :
+
+                                self.menuInteration(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+
+                        
+                       
 
                     elif checker == "n" or check_string == "N" :
                             
@@ -179,127 +263,83 @@ class csvInteraction:
 
                         self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
             
-                elif command == "d":
-                    
-                    
-                    print("Sie wollen das Datum, der Tätigkeit ' " + strToDo[0:10] + "..."+ " ' ändern.")
-                    dateInput = input("Geben Sie hierfür ein neues Datum ein:\n\n")
-
-                    
-
-                    checker = input("Eintrag speichern? || ( y ) OR ( n )   ")
-                    
-                    if checker == "y" :
-                                
-                        item = ListItem.ItemOfToDoList(strToDo, dateInput, checkDone)
-                        newItemforDB = item.getItem()
-                        connector.changeItem(newItemforDB, window)
-                        window.initToDoList( connector.getallItemsForList() )
-                            
-                        window = Window.Window()
-                        connector = SqlConnector.SQLConnector()
-
-                        arrOfAllElements = connector.getallItemsForList()
-                
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
-
-                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
-                        
-
-                    elif checker == "n" :
-                
-                        window.initToDoList( connector.getallItemsForList )
-                        
-                        window = Window.Window()
-                        connector = SqlConnector.SQLConnector()
-
-                        arrOfAllElements = connector.getallItemsForList()
-                
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
-
-                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
-                            
-                    else: 
-                                
-                        print("Ihre Eingabe war nicht korrekt")
-                        window.initToDoList( connector.getallItemsForList )
-                            
-                        window = Window.Window()
-                        connector = SqlConnector.SQLConnector()
-
-                        arrOfAllElements = connector.getallItemsForList()
-                
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
-
-                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
-            
                 elif command == "s":
-            
-                    print(" Sie wollen den Status, der Tätigkeit ' " + strToDo[0:10] + "..."+ " am " + dateToDo +" ändern.")
                         
+                    check_string = " "*13 + "» S «  SIE WOLLEN EINEN STATUS ÄNDERN" + " "*15
+                    print("\n┌" + "─" * 65 + "┐")
+                    self.textOutPut_hack("│" + check_string + "│\n")
+                    print("└" + "─" * 65 + "┘\n\n")      
+                                            
                     if checkDone == True:
-
-                        checkerStatusChange = input("Wollen Sie den auf 'NICHT ERLEDIGT' stellen? ||  ( y ) OR ( n )   ")
+                        self.textOutPut_hack(">>>   WOLLEN SIE DEN STATUS AUF 'NICHT ERLEDIGT' STELLEN? ||  » Y « OR » N «  \n\n")
+                        checkerStatusChange = input(">>>   ")
                         
                     else:
 
-                        checkerStatusChange = input("Wollen Sie den auf 'ERLEDIGT' stellen? ||  ( y ) OR ( n )  ")
+                        self.textOutPut_hack(">>>   WOLLEN SIE DEN STATUS AUF 'ERLEDIGT' STELLEN? ||  » Y « OR » N «  \n\n")
+                        checkerStatusChange = input(">>>   ")
                         
                     
 
-                    if checkerStatusChange == "y":
+                    if checkerStatusChange == "y" or checkerStatusChange == "Y":
 
                         booleanInput =  checkDone == False     
                                 
                         item = ListItem.ItemOfToDoList(strToDo, dateToDo, booleanInput)
-                        newItemforDB = item.getItem()
-                        connector.changeItem(newItemforDB, window)
-                                
-                        window = Window.Window()
-                        connector = SqlConnector.SQLConnector()
+                       
+                        newItemforCSV = item.getItem()
+                        start_item = ("strToDo", "booleanToDo", "dateToDo")
+                        
+                        itemArray=[]
+                        itemArray.append(start_item)
+                        
+                        all_itemArray = file.readFile()
+                        
+                        for item in all_itemArray:
+                            itemArray.append(item)
+                        
+                        itemArray[id_number] = newItemforCSV
 
-                        arrOfAllElements = connector.getallItemsForList()
+                        is_it_ready = file.changeItem(itemArray)
+
+                        if is_it_ready == "1" :
+
+                            ui = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
                     
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                    
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                            command = ui.are_you_ready()
 
-                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
-                                
+                            if command == False :
 
-                    elif checkerStatusChange == "n" :
+                                self.menuInteration(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
 
-                        window.initToDoList(connector.getallItemsForList)
-
-                        window = Window.Window()
-                        connector = SqlConnector.SQLConnector()
-
-                        arrOfAllElements = connector.getallItemsForList()
-                    
-                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                    
-                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
-
-                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
-
-                    else : 
-
-                        print("Sie haben eine falsche Angabe gemacht.")
-                        window.initToDoList(connector.getallItemsForList)
+                     
+                    elif checkerStatusChange == "n" or check_string == "N" :
                             
+                        window.initToDoList( connector.getallItemsForList() )
+                        
                         window = Window.Window()
                         connector = SqlConnector.SQLConnector()
 
                         arrOfAllElements = connector.getallItemsForList()
-                    
+                
                         nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                    
+                
+                        user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+
+                        self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
+                        
+                    else: 
+                            
+                        print("Ihre Eingabe war nicht korrekt")
+                        window.initToDoList( connector.getallItemsForList() )    
+                        
+                        window = Window.Window()
+                        connector = SqlConnector.SQLConnector()
+
+                        arrOfAllElements = connector.getallItemsForList()
+                
+                        nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
+                
                         user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
 
                         self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
@@ -321,10 +361,11 @@ class csvInteraction:
                 arrOfAllElements = connector.getallItemsForList()
 
                 nextStep = window.initToDoList(arrOfAllElements, 0, index_Of_nxtStep)
-                user = unserinteraction.Userinteraction(nextStep, arrOfAllElements, connector, window, index_Of_nxtStep)
+                user = unserinteraction.Userinteraction(nextStep, arrOfAllElements,
+                                                         connector, window, index_Of_nxtStep)
                 self.menuInteration( nextStep, arrOfAllElements, connector, window, index_Of_nxtStep )
 
-            elif nextStep == "?" :
+            elif nextStep == "" :
                 
                 window = Window.Window()
                 connector = SqlConnector.SQLConnector()
